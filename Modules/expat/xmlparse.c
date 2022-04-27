@@ -34,10 +34,10 @@
 #  define _GNU_SOURCE 1 /* syscall prototype */
 #endif
 
-#ifdef _WIN32
-/* force stdlib to define rand_s() */
+/* #ifdef _WIN32
+// force stdlib to define rand_s() 
 #  define _CRT_RAND_S
-#endif
+#endif*/
 
 #ifdef _WIN32
 #  include "winconfig.h"
@@ -88,6 +88,8 @@
 #if defined(_WIN32) && ! defined(LOAD_LIBRARY_SEARCH_SYSTEM32)
 #  define LOAD_LIBRARY_SEARCH_SYSTEM32 0x00000800
 #endif
+
+#define XML_POOR_ENTROPY
 
 #if ! defined(HAVE_GETRANDOM) && ! defined(HAVE_SYSCALL_GETRANDOM)             \
     && ! defined(HAVE_ARC4RANDOM_BUF) && ! defined(HAVE_ARC4RANDOM)            \
@@ -732,12 +734,12 @@ writeRandomBytes_arc4random(void *target, size_t count) {
 
 #endif /* defined(HAVE_ARC4RANDOM) && ! defined(HAVE_ARC4RANDOM_BUF) */
 
-#ifdef _WIN32
+/*#ifdef _WIN32
 
-/* Obtain entropy on Windows using the rand_s() function which
+ Obtain entropy on Windows using the rand_s() function which
  * generates cryptographically secure random numbers.  Internally it
  * uses RtlGenRandom API which is present in Windows XP and later.
- */
+ 
 static int
 writeRandomBytes_rand_s(void *target, size_t count) {
   size_t bytesWrittenTotal = 0;
@@ -747,7 +749,7 @@ writeRandomBytes_rand_s(void *target, size_t count) {
     size_t i = 0;
 
     if (rand_s(&random32))
-      return 0; /* failure */
+      return 0; // failure 
 
     for (; (i < sizeof(random32)) && (bytesWrittenTotal < count);
          i++, bytesWrittenTotal++) {
@@ -755,10 +757,10 @@ writeRandomBytes_rand_s(void *target, size_t count) {
       ((uint8_t *)target)[bytesWrittenTotal] = random8;
     }
   }
-  return 1; /* success */
+  return 1; //success
 }
 
-#endif /* _WIN32 */
+#endif // _WIN32 */
 
 #if ! defined(HAVE_ARC4RANDOM_BUF) && ! defined(HAVE_ARC4RANDOM)
 
@@ -810,7 +812,7 @@ generate_hash_secret_salt(XML_Parser parser) {
   writeRandomBytes_arc4random((void *)&entropy, sizeof(entropy));
   return ENTROPY_DEBUG("arc4random", entropy);
 #else
-  /* Try high quality providers first .. */
+  /* Try high quality providers first .. 
 #  ifdef _WIN32
   if (writeRandomBytes_rand_s((void *)&entropy, sizeof(entropy))) {
     return ENTROPY_DEBUG("rand_s", entropy);
@@ -824,7 +826,7 @@ generate_hash_secret_salt(XML_Parser parser) {
   if (writeRandomBytes_dev_urandom((void *)&entropy, sizeof(entropy))) {
     return ENTROPY_DEBUG("/dev/urandom", entropy);
   }
-#  endif /* ! defined(_WIN32) && defined(XML_DEV_URANDOM) */
+#  endif */ /* ! defined(_WIN32) && defined(XML_DEV_URANDOM) */
   /* .. and self-made low quality for backup: */
 
   /* Process ID is 0 bits entropy if attacker has local access */

@@ -562,13 +562,13 @@ extern "C" {
         _Py_set_387controlword(old_387controlword)
 #endif
 
-/* get and set x87 control word for VisualStudio/x86 */
-#if defined(_MSC_VER) && !defined(_WIN64) /* x87 not supported in 64-bit */
+/* // get and set x87 control word for VisualStudio/x86
+#if defined(_MSC_VER) && !defined(_WIN64) // x87 not supported in 64-bit
 #define HAVE_PY_SET_53BIT_PRECISION 1
 #define _Py_SET_53BIT_PRECISION_HEADER \
     unsigned int old_387controlword, new_387controlword, out_387controlword
-/* We use the __control87_2 function to set only the x87 control word.
-   The SSE control word is unaffected. */
+// We use the __control87_2 function to set only the x87 control word.
+// The SSE control word is unaffected.
 #define _Py_SET_53BIT_PRECISION_START                                   \
     do {                                                                \
         __control87_2(0, 0, &old_387controlword, NULL);                 \
@@ -585,6 +585,7 @@ extern "C" {
                           &out_387controlword, NULL);                   \
     } while (0)
 #endif
+*/
 
 /* default definitions are empty */
 #ifndef HAVE_PY_SET_53BIT_PRECISION

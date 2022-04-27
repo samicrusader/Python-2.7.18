@@ -7213,10 +7213,10 @@ posix_putenv(PyObject *self, PyObject *args)
     /* XXX This can leak memory -- not easy to fix :-( */
     len = strlen(s1) + strlen(s2) + 2;
 #ifdef MS_WINDOWS
-    if (_MAX_ENV < (len - 1)) {
+    if (255 < (len - 1)) { // 255 used to be _MAX_ENV, breaks vc71 for some reason /shrug
         PyErr_Format(PyExc_ValueError,
                      "the environment variable is longer than %u bytes",
-                     _MAX_ENV);
+                     255);
         return NULL;
     }
 #endif
